@@ -9,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import java.util.List;
+
 import cistec.prueba.R;
 import cistec.prueba.rest.model.Project;
 import cistec.prueba.ui.ProjectDetailActivity;
@@ -56,21 +58,21 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ProjectViewHolder>
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView){
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
 
-    public static class ProjectViewHolder extends RecyclerView.ViewHolder {
+    protected static class ProjectViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         TextView projectName;
         TextView projectDescription;
 
         ProjectViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView) itemView.findViewById(R.id.cardview);
-            projectName = (TextView) itemView.findViewById(R.id.projectNameTextView);
-            projectDescription  = (TextView) itemView.findViewById(R.id.projectDescriptionTextView);
+            cardView = itemView.findViewById(R.id.cardview);
+            projectName = itemView.findViewById(R.id.projectNameTextView);
+            projectDescription = itemView.findViewById(R.id.projectDescriptionTextView);
         }
     }
 

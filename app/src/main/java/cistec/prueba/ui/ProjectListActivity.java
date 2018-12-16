@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.widget.Toast;
 
 
 import java.util.List;
@@ -48,6 +48,9 @@ public class ProjectListActivity extends AppCompatActivity {
         executeRestGetProjectList();
     }
 
+    /**
+     * Executes the call to the api and manages the results
+     */
     private void executeRestGetProjectList(){
         Call<ProjectListAnswerObject> call = cistecRestAdapter.getList(this.access_token);
         call.enqueue(new Callback<ProjectListAnswerObject>() {
@@ -58,12 +61,18 @@ public class ProjectListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ProjectListAnswerObject> call, Throwable t) {
-                Log.d("ON GET LIST FAILURE", t.getMessage());
+                Toast toast = Toast.makeText(getApplicationContext(), R.string.get_projectList_error, Toast.LENGTH_LONG);
+                toast.show();
             }
         });
 
     }
 
+    /**
+     * Gets the response data and initializes the adapter and the recycler view
+     * @param call api call
+     * @param response api response
+     */
     private void onGetProjectSuccess(Call<ProjectListAnswerObject> call, Response<ProjectListAnswerObject> response) {
         this.projects = response.body().getData();
         this.adapter = new RVAdapter(this.projects, this);
@@ -71,6 +80,9 @@ public class ProjectListActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Gets the access token from the shared preferences
+     */
     private void getAccessTokenFromSharedPreferences() {
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE);
         String accessTokenKey = getResources().getString(R.string.access_token_key);
@@ -78,6 +90,9 @@ public class ProjectListActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Initializes the view components
+     */
     private void initViews(){
         this.recyclerView = (RecyclerView) findViewById(R.id.projectListView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

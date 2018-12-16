@@ -21,6 +21,9 @@ public class ProjectDetailActivity extends AppCompatActivity {
         initView();
     }
 
+    /**
+     * Initializes the view components.
+     */
     private void initView() {
         this.nameTextView = findViewById(R.id.projectdetail_name);
         this.descriptionTextView = findViewById(R.id.projectdetail_description);

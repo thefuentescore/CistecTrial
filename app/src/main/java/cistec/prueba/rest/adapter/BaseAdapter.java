@@ -6,6 +6,9 @@ import retrofit2.Retrofit;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Retrofit connection adapter.
+ */
 class BaseAdapter {
 
     private static Retrofit retrofit;

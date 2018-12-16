@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +18,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import cistec.prueba.R;
 import cistec.prueba.rest.adapter.CistecRestAdapter;
 import cistec.prueba.rest.model.LoginAnswerObject;
@@ -33,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
      */
     private CistecRestAdapter cistecRestAdapter;
 
@@ -48,9 +48,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
+        mUsernameView = findViewById(R.id.username);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,46 +116,64 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            /*
-            mAuthTask = new UserLoginTask(username, password);
-            mAuthTask.execute((Void) null);
-           */
             logInAsyncRestCall(username, password);
         }
     }
 
-   private void logInAsyncRestCall(String username, String password){
-       Call<LoginAnswerObject> call = cistecRestAdapter.logIn(username, password);
-       call.enqueue(new Callback<LoginAnswerObject>() {
-           @Override
-           public void onResponse(Call<LoginAnswerObject> call, Response<LoginAnswerObject> response) {
-               saveAccessTokenInSharedPreferences(response.body().getData().getAccess_token());
-               showProgress(false);
-               goToProjectListActivity();
+    /**
+     * Makes the rest call to the api and manages the success or failure of the call.
+     *
+     * @param username username of the user
+     * @param password password of the user
+     */
+    private void logInAsyncRestCall(String username, String password) {
+        Call<LoginAnswerObject> call = cistecRestAdapter.logIn(username, password);
+        call.enqueue(new Callback<LoginAnswerObject>() {
+            @Override
+            public void onResponse(Call<LoginAnswerObject> call, Response<LoginAnswerObject> response) {
+                saveAccessTokenInSharedPreferences(response.body().getData().getAccess_token());
+                showProgress(false);
+                goToProjectListActivity();
 
-           }
+            }
 
-           @Override
-           public void onFailure(Call<LoginAnswerObject> call, Throwable t) {
+            @Override
+            public void onFailure(Call<LoginAnswerObject> call, Throwable t) {
+                showProgress(false);
+                Toast toast = Toast.makeText(getApplicationContext(), R.string.login_error_msg, Toast.LENGTH_LONG);
+                toast.show();
+            }
+        });
 
-               showProgress(false);
-           }
-       });
+    }
 
-   }
-
+    /**
+     * Creates a the Project List activity intent and executes it
+     */
     private void goToProjectListActivity() {
         Intent intent = new Intent(this, ProjectListActivity.class);
         startActivity(intent);
 
     }
-    private void saveAccessTokenInSharedPreferences(String token){
-       SharedPreferences sharedPref = getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE);
-       sharedPref.edit().putString(getString(R.string.access_token_key), token).commit();
-   }
 
+    /**
+     * Saves the access token in the shared preferences
+     *
+     * @param token Access token
+     */
+    private void saveAccessTokenInSharedPreferences(String token) {
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE);
+        sharedPref.edit().putString(getString(R.string.access_token_key), token).commit();
+    }
+
+    /**
+     * Checks if the password is valid ( length > 4 )
+     *
+     * @param password password to be checked
+     * @return boolean
+     */
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
+
         return password.length() > 4;
     }
 
@@ -194,63 +212,5 @@ public class LoginActivity extends AppCompatActivity {
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     *
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }
-    */
 }
 
