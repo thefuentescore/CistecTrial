@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Prueba</string>
     <string name="access_token_key">acces_token</string>
+    <string name="shared_pref">SHARED_PREFERENCES</string>
     <!-- Strings related to login -->
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password (optional)</string>
@@ -9,4 +10,5 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+
 </resources>

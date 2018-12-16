@@ -2,7 +2,9 @@ package cistec.prueba.rest.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class LoginAnswerObject {
+import java.util.List;
+
+public class ProjectListAnswerObject {
     @SerializedName("error_code")
     private Integer error_code;
 
@@ -10,7 +12,7 @@ public class LoginAnswerObject {
     private String message;
 
     @SerializedName("data")
-    private LoginAnswerData data;
+    private  List<Project> data;
 
     public Integer getError_code() {
         return error_code;
@@ -20,16 +22,7 @@ public class LoginAnswerObject {
         return message;
     }
 
-    public LoginAnswerData getData() {
+    public List<Project> getData() {
         return data;
-    }
-
-    public class LoginAnswerData {
-        @SerializedName("access_token")
-        private String access_token;
-
-        public String getAccess_token() {
-            return access_token;
-        }
     }
 }

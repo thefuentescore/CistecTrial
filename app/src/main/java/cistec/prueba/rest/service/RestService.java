@@ -5,6 +5,7 @@ import java.util.List;
 import cistec.prueba.rest.constants.ApiConstants;
 import cistec.prueba.rest.model.LoginAnswerObject;
 import cistec.prueba.rest.model.Project;
+import cistec.prueba.rest.model.ProjectListAnswerObject;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -19,5 +20,5 @@ public interface RestService {
     Call<LoginAnswerObject> logIn (@Field("user_name")String username, @Field("password")String password);
 
     @GET(ApiConstants.LIST_GET)
-    Call<List<Project>> getList(@Header("X-Authorization") String authToken);
+    Call<ProjectListAnswerObject> getList(@Header("X-Authorization") String authToken);
 }

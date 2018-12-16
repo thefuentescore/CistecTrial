@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Build;
@@ -128,9 +129,9 @@ public class LoginActivity extends AppCompatActivity {
        call.enqueue(new Callback<LoginAnswerObject>() {
            @Override
            public void onResponse(Call<LoginAnswerObject> call, Response<LoginAnswerObject> response) {
-               Log.d("ON LOGIN SUCCESS:",response.body().getData().getAccess_token());
                saveAccessTokenInSharedPreferences(response.body().getData().getAccess_token());
                showProgress(false);
+               goToProjectListActivity();
 
            }
 
@@ -143,11 +144,14 @@ public class LoginActivity extends AppCompatActivity {
 
    }
 
-   private void saveAccessTokenInSharedPreferences(String token){
-       SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-       SharedPreferences.Editor editor = sharedPref.edit();
-       editor.putString(getString(R.string.access_token_key), token);
-       editor.commit();
+    private void goToProjectListActivity() {
+        Intent intent = new Intent(this, ProjectListActivity.class);
+        startActivity(intent);
+
+    }
+    private void saveAccessTokenInSharedPreferences(String token){
+       SharedPreferences sharedPref = getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE);
+       sharedPref.edit().putString(getString(R.string.access_token_key), token).commit();
    }
 
     private boolean isPasswordValid(String password) {

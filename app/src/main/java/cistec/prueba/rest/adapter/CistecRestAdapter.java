@@ -5,6 +5,7 @@ import java.util.List;
 import cistec.prueba.rest.constants.ApiConstants;
 import cistec.prueba.rest.model.LoginAnswerObject;
 import cistec.prueba.rest.model.Project;
+import cistec.prueba.rest.model.ProjectListAnswerObject;
 import cistec.prueba.rest.service.RestService;
 import retrofit2.Call;
 
@@ -22,7 +23,7 @@ public class CistecRestAdapter extends BaseAdapter implements RestService {
     }
 
     @Override
-    public Call<List<Project>> getList(String authToken) {
+    public Call<ProjectListAnswerObject> getList(String authToken) {
         return cistecRestService.getList(authToken);
     }
 }
