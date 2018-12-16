@@ -1,6 +1,7 @@
 package cistec.prueba.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 import cistec.prueba.R;
 import cistec.prueba.rest.model.Project;
+import cistec.prueba.ui.ProjectDetailActivity;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ProjectViewHolder> {
 
@@ -31,10 +33,22 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ProjectViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProjectViewHolder projectViewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ProjectViewHolder projectViewHolder, int i) {
+        final int pos = i;
         projectViewHolder.projectName.setText(projects.get(i).getName());
         projectViewHolder.projectDescription.setText(projects.get(i).getDescription());
+        projectViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ctx, ProjectDetailActivity.class);
+                intent.putExtra("name", projectViewHolder.projectName.getText());
+                intent.putExtra("description", projectViewHolder.projectDescription.getText());
+                intent.putExtra("image_url", projects.get(pos).getImage_url());
+                ctx.startActivity(intent);
+            }
+        });
     }
+
 
     @Override
     public int getItemCount() {
